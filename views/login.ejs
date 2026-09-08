@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Alexis Construction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .login-card {
+            position: relative;
+            z-index: 1;
+            max-width: 420px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+        .brand-diamond-logo {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            border-radius: 10px;
+            box-shadow: 0 0 14px rgba(59, 130, 246, 0.35);
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        .dark-input {
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+        .dark-input::placeholder {
+            color: #cbd5e1 !important;
+            opacity: 0.85;
+        }
+        .dark-input:focus {
+            background: rgba(2, 6, 23, 0.95);
+            border-color: #60a5fa;
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        .btn-glow-primary {
+            background: #ffffff;
+            color: #030712;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 11px;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .btn-glow-primary:hover {
+            background: #f1f5f9;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-white mb-1 d-flex align-items-center justify-content-center">
+                <span class="brand-diamond-logo">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2 Q17 12 22 12 Q17 12 12 22 Q7 12 2 12 Q7 12 12 2 Z" fill="#60a5fa"/>
+                    </svg>
+                </span>
+                Alexis.
+            </h3>
+            <p class="text-secondary small">Restricted Administrator Authentication</p>
+        </div>
+
+        <% if (locals.error) { %>
+            <div class="alert alert-danger py-2 small text-center bg-dark text-danger border-danger" role="alert">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/login" method="POST" autocomplete="off">
+            <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold">Admin Username / Email</label>
+                <input type="text" name="username" class="form-control dark-input" placeholder="Enter username (e.g. alexis)" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold">Password</label>
+                <input type="password" name="password" class="form-control dark-input" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn-glow-primary mt-2">Log In to Portal</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="/" class="text-decoration-none text-secondary small">← Back to Public Site</a>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.targetX = e.clientX;
+            mouse.targetY = e.clientY;
+        });
+
+        function drawDiamond(cx, cy, size, alpha) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - size);
+            ctx.quadraticCurveTo(cx, cy, cx + size, cy);
+            ctx.quadraticCurveTo(cx, cy, cx, cy + size);
+            ctx.quadraticCurveTo(cx, cy, cx - size, cy);
+            ctx.quadraticCurveTo(cx, cy, cx, cy - size);
+            ctx.closePath();
+            ctx.fillStyle = `rgba(96, 165, 250, ${alpha})`;
+            ctx.shadowColor = '#3b82f6';
+            ctx.shadowBlur = size * 1.5;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function render() {
+            mouse.x += (mouse.targetX - mouse.x) * 0.08;
+            mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const radialGrad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 500);
+            radialGrad.addColorStop(0, 'rgba(30, 58, 138, 0.25)');
+            radialGrad.addColorStop(0.6, 'rgba(15, 23, 42, 0.1)');
+            radialGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+            ctx.fillStyle = radialGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            const gridSize = 130;
+            const radius = 400;
+
+            const startX = Math.floor((mouse.x - radius) / gridSize) * gridSize;
+            const endX = Math.ceil((mouse.x + radius) / gridSize) * gridSize;
+            const startY = Math.floor((mouse.y - radius) / gridSize) * gridSize;
+            const endY = Math.ceil((mouse.y + radius) / gridSize) * gridSize;
+
+            for (let x = startX; x <= endX; x += gridSize) {
+                for (let y = startY; y <= endY; y += gridSize) {
+                    const dist = Math.hypot(x - mouse.x, y - mouse.y);
+                    if (dist < radius) {
+                        const intensity = 1 - (dist / radius);
+                        const diamondSize = 30 * Math.pow(intensity, 1.6);
+                        const alpha = 0.4 * intensity;
+                        drawDiamond(x, y, diamondSize, alpha);
+                    }
+                }
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        render();
+    </script>
+</body>
+</html>

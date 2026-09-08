@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexis Construction | Smart Construction Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Modern Glass Navbar */
+        .custom-navbar {
+            background: rgba(3, 7, 18, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-diamond-logo {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.35);
+        }
+        .nav-link {
+            color: #9ca3af !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #ffffff !important;
+        }
+
+        /* Hero Section */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            margin-bottom: 24px;
+        }
+        .hero-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+        .hero-badge .tag {
+            color: #60a5fa;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            color: #ffffff;
+            max-width: 850px;
+            margin: 0 auto 20px;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: #94a3b8;
+            font-size: 1.15rem;
+            max-width: 680px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+        }
+
+        .pill-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 4px;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(96, 165, 250, 0.4);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .rate-label {
+            color: #cbd5e1 !important;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        /* CTA Blue Card Box */
+        .cta-blue-card {
+            background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.95) 0%, rgba(29, 78, 216, 0.9) 50%, rgba(30, 58, 138, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 35px rgba(59, 130, 246, 0.35);
+            color: #ffffff;
+        }
+
+        /* Form Inputs & Pure White SVG Calendar Indicator */
+        .dark-input {
+            background-color: rgba(2, 6, 23, 0.7) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+        }
+        .dark-input::placeholder {
+            color: #cbd5e1 !important;
+            opacity: 0.85;
+        }
+        .dark-input:focus {
+            background-color: rgba(2, 6, 23, 0.9) !important;
+            border-color: #60a5fa !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35) !important;
+        }
+        .dark-input option {
+            background: #0f172a;
+            color: #fff;
+        }
+
+        input[type="date"].dark-input::-webkit-calendar-picker-indicator {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            cursor: pointer !important;
+            opacity: 1 !important;
+            width: 20px !important;
+            height: 20px !important;
+            filter: none !important;
+        }
+
+        /* Section Highlight pulse */
+        @keyframes pulseHighlight {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); transform: scale(1); }
+            50% { box-shadow: 0 0 40px 10px rgba(59, 130, 246, 0.5); transform: scale(1.01); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); transform: scale(1); }
+        }
+        .section-highlight {
+            animation: pulseHighlight 1.3s ease-out;
+            border-radius: 20px;
+        }
+
+        /* Buttons */
+        .btn-glow-primary {
+            background: #ffffff;
+            color: #030712;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            transition: all 0.2s ease;
+        }
+        .btn-glow-primary:hover {
+            background: #f1f5f9;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-glow-secondary {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 24px;
+            transition: all 0.2s ease;
+        }
+        .btn-glow-secondary:hover {
+            background: rgba(30, 41, 59, 0.8);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Modern Dark Footer */
+        .custom-footer {
+            background: #020617;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 30px 0 25px;
+        }
+        .footer-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+        .footer-link:hover {
+            color: #ffffff;
+        }
+        .back-to-top-btn {
+            background: #ffffff;
+            color: #030712;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .back-to-top-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
+            color: #000;
+        }
+    </style>
+</head>
+<body data-booking-success="<%= locals.success ? 'true' : 'false' %>">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="main-wrapper">
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-lg custom-navbar sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <span class="brand-diamond-logo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2 Q17 12 22 12 Q17 12 12 22 Q7 12 2 12 Q7 12 12 2 Z" fill="#60a5fa"/>
+                        </svg>
+                    </span>
+                    Alexis.
+                </a>
+                <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#clientNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="clientNav">
+                    <ul class="navbar-nav me-auto ms-lg-4">
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="javascript:void(0)" onclick="goToSection('services-target')">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="javascript:void(0)" onclick="goToSection('about-target')">Why Choose Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="javascript:void(0)" onclick="goToSection('book-target')">Book a Visit</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="/login" class="btn btn-glow-secondary btn-sm px-3">Admin Portal</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="text-center pt-5 pb-5">
+            <div class="container pt-4">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    <span>Verified Construction Management</span>
+                    <span class="tag">Release 2026 &gt;&gt;&gt;</span>
+                </div>
+
+                <h1 class="hero-title">
+                    Components to<br>
+                    <span>Complete Structures</span>
+                </h1>
+
+                <p class="hero-desc">
+                    A structured, precision-driven construction service system built to schedule visits, manage inventory tools, and generate transparent hourly billings.
+                </p>
+
+                <div class="d-flex justify-content-center gap-3 mb-5">
+                    <button onclick="goToSection('book-target')" class="btn btn-glow-primary">
+                        Start Booking
+                    </button>
+                    <button onclick="goToSection('services-target')" class="btn btn-glow-secondary">
+                        View Rates ↗
+                    </button>
+                </div>
+
+                <div class="d-flex justify-content-center flex-wrap gap-2 pt-2">
+                    <span class="pill-tag">⚡ Hourly Metered</span>
+                    <span class="pill-tag">🛠️ Tool Tracking</span>
+                    <span class="pill-tag">🔒 Scheduled Calendar</span>
+                    <span class="pill-tag">📑 Split Billing Ready</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Error Notification -->
+        <div class="container mt-2">
+            <% if (locals.error) { %>
+                <div class="alert alert-danger alert-dismissible fade show bg-dark text-danger border-danger" role="alert">
+                    <strong>Notice:</strong> <%= error %>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Services & Rates Section -->
+        <section id="services-target" class="py-5">
+            <div class="container py-4">
+                <div class="text-center mb-5">
+                    <span class="text-primary fw-bold text-uppercase small" style="letter-spacing: 1px;">Pricing Directory</span>
+                    <h2 class="fw-bold mt-2" style="font-size: 2.2rem;">Services Designed for Real Projects</h2>
+                    <p class="text-secondary">Explore all service options with verified hourly rates</p>
+                </div>
+
+                <div class="row g-4">
+                    <% for(let s = 0; s < services.length; s++) { %>
+                        <div class="col-md-4">
+                            <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-2 py-1">Code #<%= services[s].id %></span>
+                                        <span class="rate-label">Standard Rate</span>
+                                    </div>
+                                    <h4 class="fw-bold text-white mb-2"><%= services[s].service_name %></h4>
+                                    <p class="text-secondary small">Comprehensive craftsmanship, dedicated equipment dispatch, and verified site execution.</p>
+                                </div>
+                                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                                    <div class="d-flex align-items-baseline mb-3">
+                                        <span class="fs-3 fw-bold text-white">₱<%= services[s].hourly_rate.toFixed(2) %></span>
+                                        <span class="text-secondary ms-2 small">/ hour</span>
+                                    </div>
+                                    <button onclick="goToSection('book-target')" class="btn btn-outline-light w-100 btn-sm py-2">
+                                        Select Service
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us -->
+        <section id="about-target" class="py-5">
+            <div class="container py-4">
+                <div class="glass-card p-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-7 mb-4 mb-md-0">
+                            <span class="text-primary fw-bold text-uppercase small" style="letter-spacing: 1px;">Architecture & Standards</span>
+                            <h2 class="fw-bold text-white mt-2 mb-3">Built with Integrity & Precision</h2>
+                            <p class="text-secondary mb-4">
+                                Alexis Construction ensures fair, transparent transactions. Every hour rendered is accurately audited against dynamic service preferences and dedicated equipment inventory.
+                            </p>
+                            <div class="d-flex flex-column gap-2 text-secondary">
+                                <div>✓ Direct hourly transparent pricing ledger</div>
+                                <div>✓ Dedicated tool tracking and category management</div>
+                                <div>✓ Real-time unique date scheduling engine</div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="p-4 rounded-3" style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);">
+                                <h6 class="fw-bold text-white mb-3">Service Inquiries</h6>
+                                <p class="text-secondary small mb-2"><strong>Hours:</strong> Mon – Sat: 8:00 AM – 5:00 PM</p>
+                                <p class="text-secondary small mb-2"><strong>Location:</strong> Davao City, Philippines</p>
+                                <p class="text-secondary small mb-0"><strong>Emergency Line:</strong> (082) 234-5678</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blue Card Schedule / Booking Section -->
+        <section id="book-target" class="py-5">
+            <div class="container py-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="cta-blue-card p-4 p-md-5 text-center">
+                            <h2 class="fw-bold text-white mb-2 pt-2" style="font-size: 2.2rem;">Book a Visit &amp; Schedule Service</h2>
+                            <p class="text-white text-opacity-75 small mb-4 mx-auto" style="max-width: 580px;">
+                                Reserve your date directly in our digital ledger. Receive transparent hourly rates and prompt confirmation.
+                            </p>
+
+                            <form action="/client-book" method="POST" class="text-start">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-white text-opacity-75 small fw-bold">Full Name</label>
+                                        <input type="text" name="name" class="form-control dark-input" placeholder="e.g. Maria Santos" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-white text-opacity-75 small fw-bold">Contact Number</label>
+                                        <input type="text" name="contact" class="form-control dark-input" placeholder="e.g. 09171234567" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label text-white text-opacity-75 small fw-bold">Service Location / Address</label>
+                                        <input type="text" name="address" class="form-control dark-input" placeholder="e.g. Matina, Davao City" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-white text-opacity-75 small fw-bold">Primary Service Needed</label>
+                                        <select name="service_id" class="form-select dark-input" required>
+                                            <option value="" disabled selected>Choose a service...</option>
+                                            <% for(let s = 0; s < services.length; s++) { %>
+                                                <option value="<%= services[s].id %>"><%= services[s].service_name %> (₱<%= services[s].hourly_rate %>/hr)</option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-white text-opacity-75 small fw-bold">Estimated Work Hours</label>
+                                        <input type="number" step="1" min="1" value="2" name="estimated_hours" class="form-control dark-input" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label text-white text-opacity-75 small fw-bold">Preferred Visit Date</label>
+                                        <input type="date" name="schedule_date" class="form-control dark-input" required>
+                                    </div>
+                                    <div class="col-12 mt-4 text-center">
+                                        <button type="submit" class="btn btn-dark btn-lg px-5 py-3 fw-bold rounded-pill text-white shadow" style="background-color: #030712; border: 1px solid rgba(255,255,255,0.2);">
+                                            Submit Service Request →
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Redesigned Footer -->
+        <footer class="custom-footer">
+            <div class="container">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div class="d-flex flex-column">
+                        <div class="navbar-brand text-white fw-bold mb-1">
+                            <span class="brand-diamond-logo">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 2 Q17 12 22 12 Q17 12 12 22 Q7 12 2 12 Q7 12 12 2 Z" fill="#60a5fa"/>
+                                </svg>
+                            </span>
+                            Alexis.
+                        </div>
+                        <small class="text-secondary">v1.0.0 | Built for Alexis Construction Examination</small>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-4">
+                        <a href="javascript:void(0)" onclick="goToSection('services-target')" class="footer-link">Services</a>
+                        <a href="javascript:void(0)" onclick="goToSection('about-target')" class="footer-link">Standards</a>
+                        <a href="/login" class="footer-link">Admin Portal</a>
+                        <a href="javascript:window.scrollTo({top: 0, behavior: 'smooth'})" class="back-to-top-btn" title="Back to top">
+                            ↑
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Confirmation Modal Popup -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card border-secondary text-center p-4">
+                <div class="modal-body">
+                    <div class="mb-3" style="font-size: 3rem;">✨</div>
+                    <h3 class="fw-bold text-white mb-2">Booking Submitted!</h3>
+                    <p class="text-secondary small">
+                        Your service request has been recorded into our schedule ledger. Alexis will review your visit date and reach out shortly.
+                    </p>
+                    <button type="button" class="btn btn-glow-primary w-100 mt-3" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function goToSection(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const absoluteTop = rect.top + window.pageYOffset;
+            const centerPosition = absoluteTop - (window.innerHeight / 2) + (rect.height / 2);
+            window.scrollTo({ top: centerPosition, behavior: 'smooth' });
+            el.classList.remove('section-highlight');
+            void el.offsetWidth;
+            el.classList.add('section-highlight');
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const isSuccess = document.body.getAttribute('data-booking-success') === 'true';
+            if (isSuccess) {
+                const modalElement = document.getElementById('confirmationModal');
+                if (modalElement) {
+                    new bootstrap.Modal(modalElement).show();
+                }
+            }
+        });
+
+        // Mouse Tracking Star/Diamond Grid
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        let mouse = { x: width / 2, y: height / 3, targetX: width / 2, targetY: height / 3 };
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.targetX = e.clientX;
+            mouse.targetY = e.clientY;
+        });
+
+        function drawDiamond(cx, cy, size, alpha) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - size);
+            ctx.quadraticCurveTo(cx, cy, cx + size, cy);
+            ctx.quadraticCurveTo(cx, cy, cx, cy + size);
+            ctx.quadraticCurveTo(cx, cy, cx - size, cy);
+            ctx.quadraticCurveTo(cx, cy, cx, cy - size);
+            ctx.closePath();
+            ctx.fillStyle = `rgba(96, 165, 250, ${alpha})`;
+            ctx.shadowColor = '#3b82f6';
+            ctx.shadowBlur = size * 1.5;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function render() {
+            mouse.x += (mouse.targetX - mouse.x) * 0.08;
+            mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const radialGrad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 600);
+            radialGrad.addColorStop(0, 'rgba(30, 58, 138, 0.22)');
+            radialGrad.addColorStop(0.6, 'rgba(15, 23, 42, 0.1)');
+            radialGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+            ctx.fillStyle = radialGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            const gridSize = 140;
+            const radius = 450;
+
+            const startX = Math.floor((mouse.x - radius) / gridSize) * gridSize;
+            const endX = Math.ceil((mouse.x + radius) / gridSize) * gridSize;
+            const startY = Math.floor((mouse.y - radius) / gridSize) * gridSize;
+            const endY = Math.ceil((mouse.y + radius) / gridSize) * gridSize;
+
+            for (let x = startX; x <= endX; x += gridSize) {
+                for (let y = startY; y <= endY; y += gridSize) {
+                    const dist = Math.hypot(x - mouse.x, y - mouse.y);
+                    if (dist < radius) {
+                        const intensity = 1 - (dist / radius);
+                        const diamondSize = 35 * Math.pow(intensity, 1.6);
+                        const alpha = 0.45 * intensity;
+                        drawDiamond(x, y, diamondSize, alpha);
+                    }
+                }
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        render();
+    </script>
+</body>
+</html>

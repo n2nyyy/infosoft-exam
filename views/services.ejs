@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Rates - Alexis Construction Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glass Navbar */
+        .custom-navbar {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-diamond-logo {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.35);
+        }
+        .nav-link {
+            color: #9ca3af !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #ffffff !important;
+        }
+        .nav-link.active {
+            color: #60a5fa !important;
+            font-weight: 700;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Dark Inputs & Legible Placeholders */
+        .dark-input {
+            background: rgba(2, 6, 23, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+        .dark-input::placeholder {
+            color: #94a3b8 !important;
+            opacity: 0.85;
+        }
+        .dark-input:focus {
+            background: rgba(2, 6, 23, 0.95);
+            border-color: #3b82f6;
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Dark Table */
+        .table-dark-custom {
+            --bs-table-bg: transparent;
+            --bs-table-color: #e2e8f0;
+            --bs-table-border-color: rgba(255, 255, 255, 0.08);
+            margin-bottom: 0;
+        }
+        .table-dark-custom th {
+            background: rgba(2, 6, 23, 0.9);
+            color: #94a3b8;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .table-dark-custom td {
+            padding: 14px 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .table-dark-custom tbody tr:hover {
+            background: rgba(30, 41, 59, 0.4);
+        }
+
+        /* Buttons */
+        .btn-glow-primary {
+            background: #ffffff;
+            color: #030712;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .btn-glow-primary:hover {
+            background: #f1f5f9;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-action-edit {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-action-edit:hover {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        .btn-action-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-action-delete:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="main-wrapper">
+        <!-- Uniform Admin Navbar with Diamond Logo -->
+        <nav class="navbar navbar-expand-lg custom-navbar mb-4 sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="/bookings">
+                    <span class="brand-diamond-logo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2 Q17 12 22 12 Q17 12 12 22 Q7 12 2 12 Q7 12 12 2 Z" fill="#60a5fa"/>
+                        </svg>
+                    </span>
+                    Alexis.
+                </a>
+                <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="adminNav">
+                    <div class="navbar-nav ms-auto gap-2">
+                        <a class="nav-link" href="/clients">Clients</a>
+                        <a class="nav-link active" href="/services">Services &amp; Rates</a>
+                        <a class="nav-link" href="/inventory">Inventory</a>
+                        <a class="nav-link" href="/bookings">Bookings</a>
+                        <a class="nav-link" href="/process">Process Billing</a>
+                        <a class="nav-link" href="/reports">Reports</a>
+                        <a class="nav-link text-danger fw-bold ms-lg-3" href="/logout">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container pb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold text-white mb-1">Services &amp; Hourly Rates</h3>
+                    <p class="text-secondary small mb-0">Manage hourly pricing preferences for Alexis Construction services</p>
+                </div>
+                <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-3 py-2">
+                    <%= services.length %> Active Services
+                </span>
+            </div>
+
+            <div class="row g-4">
+                <!-- Left: Form -->
+                <div class="col-lg-4">
+                    <div class="glass-card p-4">
+                        <h5 class="fw-bold text-white mb-3">
+                            <%= editService ? 'Edit Service Rate' : 'Configure New Service' %>
+                        </h5>
+                        <form action="<%= editService ? '/edit-service/' + editService.id : '/add-service' %>" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label text-secondary small fw-bold">Service Category Name</label>
+                                <input type="text" name="service_name" class="form-control dark-input" value="<%= editService ? editService.service_name : '' %>" required placeholder="e.g. Masonry Works">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-secondary small fw-bold">Standard Hourly Rate (₱)</label>
+                                <input type="number" step="0.01" name="hourly_rate" class="form-control dark-input" value="<%= editService ? editService.hourly_rate : '' %>" required placeholder="e.g. 500.00">
+                            </div>
+                            <button type="submit" class="btn-glow-primary mt-2">
+                                <%= editService ? 'Update Service Rate' : 'Save New Service' %>
+                            </button>
+                            <% if (editService) { %>
+                                <a href="/services" class="btn btn-outline-secondary w-100 mt-2 btn-sm py-2">Cancel Edit</a>
+                            <% } %>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right: Master Table -->
+                <div class="col-lg-8">
+                    <div class="glass-card overflow-hidden">
+                        <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold text-white mb-0">Master Rate Ledger</h6>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Service Name</th>
+                                        <th>Hourly Rate</th>
+                                        <th style="width: 150px;" class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (services.length === 0) { %>
+                                        <tr><td colspan="4" class="text-center text-secondary py-4">No services recorded.</td></tr>
+                                    <% } %>
+                                    <% for(let i = 0; i < services.length; i++) { %>
+                                        <tr>
+                                            <td><span class="text-secondary small">#<%= services[i].id %></span></td>
+                                            <td><strong class="text-white"><%= services[i].service_name %></strong></td>
+                                            <td>
+                                                <span class="text-primary fw-bold">₱ <%= services[i].hourly_rate.toFixed(2) %></span>
+                                                <span class="text-secondary small">/ hr</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="/services?edit=<%= services[i].id %>" class="btn-action-edit me-1">Edit</a>
+                                                <a href="/delete-service/<%= services[i].id %>" class="btn-action-delete" onclick="return confirm('Delete this service category?')">Delete</a>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mouse Tracking Background Canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let mouse = { x: width / 2, y: height / 3, targetX: width / 2, targetY: height / 3 };
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.targetX = e.clientX;
+            mouse.targetY = e.clientY;
+        });
+
+        function drawDiamond(cx, cy, size, alpha) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - size);
+            ctx.quadraticCurveTo(cx, cy, cx + size, cy);
+            ctx.quadraticCurveTo(cx, cy, cx, cy + size);
+            ctx.quadraticCurveTo(cx, cy, cx - size, cy);
+            ctx.quadraticCurveTo(cx, cy, cx, cy - size);
+            ctx.closePath();
+            ctx.fillStyle = `rgba(96, 165, 250, ${alpha})`;
+            ctx.shadowColor = '#3b82f6';
+            ctx.shadowBlur = size * 1.5;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function render() {
+            mouse.x += (mouse.targetX - mouse.x) * 0.08;
+            mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const radialGrad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 550);
+            radialGrad.addColorStop(0, 'rgba(30, 58, 138, 0.22)');
+            radialGrad.addColorStop(0.6, 'rgba(15, 23, 42, 0.1)');
+            radialGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+            ctx.fillStyle = radialGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            const gridSize = 140;
+            const radius = 420;
+
+            const startX = Math.floor((mouse.x - radius) / gridSize) * gridSize;
+            const endX = Math.ceil((mouse.x + radius) / gridSize) * gridSize;
+            const startY = Math.floor((mouse.y - radius) / gridSize) * gridSize;
+            const endY = Math.ceil((mouse.y + radius) / gridSize) * gridSize;
+
+            for (let x = startX; x <= endX; x += gridSize) {
+                for (let y = startY; y <= endY; y += gridSize) {
+                    const dist = Math.hypot(x - mouse.x, y - mouse.y);
+                    if (dist < radius) {
+                        const intensity = 1 - (dist / radius);
+                        const diamondSize = 32 * Math.pow(intensity, 1.6);
+                        const alpha = 0.45 * intensity;
+                        drawDiamond(x, y, diamondSize, alpha);
+                    }
+                }
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        render();
+    </script>
+</body>
+</html>
