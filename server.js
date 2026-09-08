@@ -6,14 +6,12 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-// Configure Express Sessions
 app.use(session({
   secret: 'alexis-construction-secret-key-2026',
   resave: false,
   saveUninitialized: false
 }));
 
-// Middleware: Protect Admin Routes (Only logged in Alexis can enter)
 function requireAdmin(req, res, next) {
   if (req.session && req.session.isAdmin) {
     return next();
@@ -21,9 +19,6 @@ function requireAdmin(req, res, next) {
   res.redirect('/login');
 }
 
-// --- PUBLIC CLIENT ROUTES ---
-
-// 1. Show the Public Landing Page
 app.get('/', (req, res) => {
   const services = db.prepare('SELECT * FROM services').all();
   res.render('index', { 
@@ -33,7 +28,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// 2. Handle Client-Facing Booking Submission
 app.post('/client-book', (req, res) => {
   const { name, contact, address, service_id, estimated_hours, schedule_date } = req.body;
 
@@ -65,8 +59,6 @@ app.post('/client-book', (req, res) => {
   res.redirect('/?success=true');
 });
 
-// --- ADMIN AUTHENTICATION ROUTES ---
-
 app.get('/login', (req, res) => {
   res.render('login', { error: req.query.error || null });
 });
@@ -74,7 +66,6 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Admin Credentials for Alexis
   if ((username === 'alexis' || username === 'alexis@construction.com') && password === 'admin123') {
     req.session.isAdmin = true;
     return res.redirect('/bookings');
@@ -88,9 +79,6 @@ app.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
-// --- 🔒 PROTECTED ADMIN ROUTES (REQUIRE LOGIN) ---
-
-// 1. CLIENTS
 app.get('/clients', requireAdmin, (req, res) => {
   const clients = db.prepare('SELECT * FROM clients').all();
   let editClient = req.query.edit ? db.prepare('SELECT * FROM clients WHERE id = ?').get(req.query.edit) : null;
@@ -114,7 +102,6 @@ app.get('/delete-client/:id', requireAdmin, (req, res) => {
   res.redirect('/clients');
 });
 
-// 2. SETUP PREFERENCES (SERVICES)
 app.get('/services', requireAdmin, (req, res) => {
   const services = db.prepare('SELECT * FROM services').all();
   let editService = req.query.edit ? db.prepare('SELECT * FROM services WHERE id = ?').get(req.query.edit) : null;
@@ -138,7 +125,6 @@ app.get('/delete-service/:id', requireAdmin, (req, res) => {
   res.redirect('/services');
 });
 
-// 3. INVENTORY
 app.get('/inventory', requireAdmin, (req, res) => {
   const services = db.prepare('SELECT * FROM services').all();
   const inventory = db.prepare(`
@@ -167,7 +153,6 @@ app.get('/delete-inventory/:id', requireAdmin, (req, res) => {
   res.redirect('/inventory');
 });
 
-// 4. BOOKINGS & SERVICES GRID
 app.get('/bookings', requireAdmin, (req, res) => {
   const clients = db.prepare('SELECT * FROM clients').all();
   const services = db.prepare('SELECT * FROM services').all();
@@ -253,7 +238,6 @@ app.get('/delete-booking/:id', requireAdmin, (req, res) => {
   res.redirect('/bookings');
 });
 
-// 5. PROCESS PAYMENTS
 app.get('/process', requireAdmin, (req, res) => {
   const billings = db.prepare(`
     SELECT billings.*, bookings.schedule_date, clients.name as client_name 
@@ -282,7 +266,6 @@ app.post('/record-payment', requireAdmin, (req, res) => {
   res.redirect('/process');
 });
 
-// 6. REPORTS & BONUS VIEW
 app.get('/reports', requireAdmin, (req, res) => {
   const clients = db.prepare('SELECT * FROM clients').all();
   

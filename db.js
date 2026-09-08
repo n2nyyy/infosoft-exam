@@ -67,17 +67,16 @@ db.exec(`
   )
 `);
 
-// Migration: safely add paid_amount if it doesn't exist yet
 try {
   db.exec(`ALTER TABLE billings ADD COLUMN paid_amount REAL DEFAULT 0;`);
 } catch (e) {
-  // column already exists, safe to ignore
+
 }
 
 try {
   db.exec(`ALTER TABLE clients ADD COLUMN address TEXT;`);
 } catch (e) {
-  // safe to ignore
+
 }
 
 console.log("Database initialized and verified!");
