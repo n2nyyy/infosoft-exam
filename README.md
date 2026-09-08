@@ -100,6 +100,10 @@ node server.js
 - Client portal: [http://localhost:3000](http://localhost:3000)
 - Admin login: [http://localhost:3000/login](http://localhost:3000/login)
 
+### 5. Admin credentials
+- **Username:** `alexis`
+- **Password:** `admin123`
+
 ---
 
 ## Project Structure
